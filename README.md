@@ -11,6 +11,8 @@ unfortunately, i'm not a Github guru, so im not sure of the protocol for working
   1. the device name is now at the top of the script to make it simpler for quick changes
   2. The GPIO devices are correct for the sonoff device
   3. the information printed via serial, now displays the device mac address should you require to give it a static IP
+  4. the LED is on initially, showing not connected, then flashes, and goes off to show connected (not a fan of lights in dark rooms)
+  5. operation via Alexa or other home automation has the LED flash once
   
 To do:
 
