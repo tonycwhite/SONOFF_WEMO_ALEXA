@@ -12,10 +12,14 @@ void turnOffRelay();
 
 byte mac[6];                     // the MAC address of your Wifi shield
 
+const char* ssid = "your SSID";
+const char* password = "your password";
+const char* friendlyName = "insert device name here";           // Alexa will use this name to identify your device
 
-const char* ssid = "your SSID here";
-const char* password = "your password here";
-const char* friendlyName = "device friendly name here";           // Alexa will use this name to identify your device
+boolean switchState = false;
+
+
+
 
 unsigned int localPort = 1900;      // local port to listen on
 
@@ -40,6 +44,11 @@ String device_name;
 const int relay_Pin = 12;
 const int LED_Pin = 13;
 //const int relay_Pin = D1;
+const int SWITCH_PIN = 0;
+
+
+
+
 
 boolean cannotConnectToWifi = false;
 
@@ -71,6 +80,36 @@ void loop() {
 
   HTTP.handleClient();
   delay(1);
+
+  
+  if (digitalRead(SWITCH_PIN)){
+    delay(250);
+    if (!digitalRead(SWITCH_PIN)){
+    switchState = !switchState;
+    Serial.print("Switch Pressed - Relay now "); 
+  
+  // Show and change Relay State  
+      if (digitalRead(relay_Pin) == LOW)
+      {
+        Serial.println("ON");
+        digitalWrite(LED_Pin, 0);
+        delay (500);
+        digitalWrite(LED_Pin, 1);  // flash LED to acknowledge operation
+        digitalWrite(relay_Pin, 1);  
+        }
+      else
+      {
+      Serial.println("OFF");
+        digitalWrite(LED_Pin, 0);
+        delay (500);
+        digitalWrite(LED_Pin, 1);  // flash LED to acknowledge operation
+        digitalWrite(relay_Pin, 0);
+      }
+    delay(500);
+    }
+    }
+
+
   
   
   // if there's data available, read a packet
@@ -81,21 +120,21 @@ void loop() {
       int packetSize = UDP.parsePacket();
       
       if(packetSize) {
-        Serial.println("");
-        Serial.print("Received packet of size ");
-        Serial.println(packetSize);
-        Serial.print("From ");
+        //Serial.println("");
+        //Serial.print("Received packet of size ");
+        //Serial.println(packetSize);
+        //Serial.print("From ");
         IPAddress remote = UDP.remoteIP();
         
         for (int i =0; i < 4; i++) {
-          Serial.print(remote[i], DEC);
+          //Serial.print(remote[i], DEC);
           if (i < 3) {
-            Serial.print(".");
+            //Serial.print(".");
           }
         }
         
-        Serial.print(", port ");
-        Serial.println(UDP.remotePort());
+        //Serial.print(", port ");
+        //Serial.println(UDP.remotePort());
         
         int len = UDP.read(packetBuffer, 255);
         
@@ -119,7 +158,7 @@ void loop() {
     }
   } else {
       // Turn on/off to indicate cannot connect ..  
-      //possibly put read of gpio0 here??    
+   
   }
 }
 
